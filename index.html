@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Park Hill Financial</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #002244, #004488);
+            color: white;
+            overflow-x: hidden;
+            transition: background 0.3s, color 0.3s;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .theme-toggle input[type="checkbox"] {
+            display: none;
+        }
+
+        .theme-label {
+            width: 35px;
+            height: 20px;
+            background-color: #fff;
+            border-radius: 20px;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .theme-label::after {
+            content: '';
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background-color: #002244;
+            top: 1px;
+            left: 1px;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+
+        .theme-toggle input[type="checkbox"]:checked + .theme-label::after {
+            transform: translateX(15px);
+            background-color: #ffcc00;
+        }
+
+
+        /* Light Mode Styles */
+        body.light-mode {
+            background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+            color: #333;
+        }
+
+        .light-mode .navbar,
+        .light-mode .hero,
+        .light-mode .hero-form,
+        .light-mode .sidebar,
+        .light-mode .reviews,
+        .light-mode .review,
+        .light-mode .footer,
+        .light-mode .contact-box {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            color: #333;
+        }
+
+        .light-mode .reviews h3,
+        .light-mode .reviews p,
+        .light-mode .reviews .stars {
+            color: #004488;
+        }
+
+        .light-mode .navbar a,
+        .light-mode .sidebar,
+        .light-mode .reviews-banner,
+        .light-mode .review,
+        .light-mode .slider_content {
+            color: #004488;
+        }
+
+        .light-mode .hero-text p {
+            color: #004488;
+        }
+
+        .light-mode .navbar .logo {
+            color: #004488;
+        }
+
+        .light-mode .slider_content {
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: none;
+        }
+
+        .light-mode .slider_content img {
+            filter: brightness(0.8);
+        }
+
+        .light-mode .navbar a:hover,
+        .light-mode .hero-text h1,
+        .light-mode .hero-form h2,
+        .light-mode .reviews h3,
+        .light-mode .reviews .stars,
+        .light-mode .footer a {
+            color: #004488;
+        }
+
+        .light-mode .hero-text h1,
+        .light-mode .hero-form h2 {
+            color: #004488;
+        }
+
+        .light-mode .navbar .logo img {
+            filter: none;
+        }
+
+        .light-mode .hero-form input,
+        .light-mode .hero-form textarea {
+            background: rgba(255, 255, 255, 0.9);
+            color: #002244;
+        }
+
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background: linear-gradient(135deg, #002244, #004488);
+            color: white;
+        }
+
+        .dark-mode .navbar,
+        .dark-mode .hero,
+        .dark-mode .hero-form,
+        .dark-mode .sidebar,
+        .dark-mode .reviews,
+        .dark-mode .review,
+        .dark-mode .footer,
+        .dark-mode .contact-box {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            color: white;
+        }
+
+        .dark-mode .navbar a,
+        .dark-mode .sidebar,
+        .dark-mode .reviews-banner,
+        .dark-mode .review,
+        .dark-mode .slider_content {
+            color: white;
+        }
+
+        .dark-mode .hero-text p {
+            color: white;
+        }
+
+        .dark-mode .slider_content {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .dark-mode .navbar .logo {
+            color: white;
+        }
+
+        .dark-mode .navbar a:hover,
+        .dark-mode .hero-text h1,
+        .dark-mode .hero-form h2,
+        .dark-mode .reviews h3,
+        .dark-mode .reviews .stars,
+        .dark-mode .footer a {
+            color: #ffcc00;
+        }
+
+        .dark-mode .navbar .logo img {
+            filter: invert(1);
+        }
+
+        .dark-mode .hero-form input,
+        .dark-mode .hero-form textarea {
+            background: rgba(255, 255, 255, 0.7);
+            color: #002244;
+        }
+
+         /* Navigation Bar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            margin: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+            height: 70px;
+        }
+
+        .navbar .logo-container {
+            display: flex;
+            align-items: center;
+            margin-right: auto;
+        }
+
+        .navbar .logo {
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+
+        .navbar .logo img {
+            max-height: 40px;
+            margin-right: 10px;
+            fill: currentColor;
+        }
+
+        .navbar .nav-links {
+            display: flex;
+            align-items: center;
+            height: 100%;
+            margin-left: -15px;
+            margin-right: auto;
+            justify-content: center;
+        }
+
+        .navbar a {
+            text-decoration: none;
+            color: white;
+            margin: 0 15px;
+            font-size: 16px;
+            transition: color 0.3s;
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar a:hover {
+            color: #ffcc00;
+        }
+
+        /* Container */
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 1200px;
+            margin: 20px auto;
+            gap: 20px;
+            padding: 0 20px;
+        }
+
+        /* Hero Section */
+        .hero,
+        .sidebar,
+        .contact-box {
+            margin: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero {
+             display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 15px;
+            flex: 2;
+           position: relative;
+        }
+
+
+        .hero-text {
+            flex: 1 1 45%;
+            padding: 20px;
+        }
+
+        .hero-text h1 {
+            font-size: 42px;
+             margin-bottom: 10px;
+        }
+
+       .hero-text p {
+           font-size: 18px;
+           margin: 10px 0 20px;
+       }
+
+       .hero-text ul li {
+            list-style: none;
+            margin-bottom: 10px;
+             font-size: 16px;
+       }
+
+        .hero-form {
+           flex: 1 1 45%;
+            background: rgba(255, 255, 255, 0.2);
+             backdrop-filter: blur(20px);
+            padding: 30px;
+           border-radius: 15px;
+             position: relative;
+            overflow: hidden;
+         }
+
+
+       .hero-form::before {
+            content: "";
+           position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+           background-image: url("https://media.istockphoto.com/id/1306515281/photo/smiling-businessman-signing-document-in-office.jpg?s=612x612&w=0&k=20&c=fhyc-a2grgBjAmDcB9tu0e9e1qAkjICAsTpCUTifLsE=");
+            background-size: cover;
+           background-position: center;
+            opacity: 0.15;
+           z-index: -1;
+           transform: scale(1.2) translateX(20%) translateY(20%) rotate(-5deg);
+           pointer-events: none;
+        }
+
+
+       .hero-form h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+         }
+
+
+       .hero-form input,
+        .hero-form textarea {
+           width: 100%;
+            padding: 10px;
+             margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+           background: rgba(255, 255, 255, 0.7);
+            color: #002244;
+            outline: none;
+       }
+
+       .hero-form button {
+            background-color: #ffcc00;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            color: #002244;
+            font-weight: bold;
+             font-size: 16px;
+            cursor: pointer;
+           transition: 0.3s;
+        }
+      .hero-form button:hover {
+             background-color: #e6b800;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: rgba(255, 255, 255, 0.1);
+             backdrop-filter: blur(20px);
+            padding: 20px;
+           border-radius: 15px;
+           max-width: 300px;
+            flex: 1;
+            position: relative;
+           overflow: hidden;
+        }
+
+       .review-slider {
+            height: 300px;
+            overflow: hidden;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .reviews-list {
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: transform 0.5s ease; /* Smooth transition for translateY */
+        }
+
+        .slider_content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px;
+            width: 100%;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            height: 150px; /* Fixed height for each review box */
+            overflow: hidden; /* Ensure content doesnt overflow */
+        }
+
+
+       .slider_content p {
+            text-align: center;
+           margin-bottom: 5px;
+            color: inherit;
+        }
+      .slider_content .slide_name {
+           font-weight: bold;
+           font-size: 15px;
+        }
+       .slider_content img {
+            max-width: 80px;
+            margin-bottom: 10px;
+        }
+
+        /* Google Reviews Section */
+        .reviews {
+            text-align: center;
+            margin: 10px auto 20px;
+           border-radius: 15px;
+            padding: 20px;
+            color: white;
+       }
+        .reviews img {
+           max-width: 100px;
+          margin-bottom: 10px;
+       }
+       .reviews h3 {
+           font-size: 20px;
+           margin-bottom: 10px;
+           color: #ffcc00;
+        }
+
+       .reviews .stars {
+            font-size: 18px;
+           color: #ffcc00;
+       }
+
+       .review {
+           margin-bottom: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 10px;
+            color: #fff;
+        }
+        /* Footer */
+        .footer {
+           background: rgba(255, 255, 255, 0.1);
+            color: white;
+           text-align: center;
+            padding: 10px 20px;
+           font-size: 14px;
+            backdrop-filter: blur(10px);
+            margin-top: auto;
+        }
+      .footer a {
+            color: #ffcc00;
+           text-decoration: none;
+        }
+
+        /* Contact Box */
+         .contact-box {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+           padding: 20px;
+            border-radius: 15px;
+           flex: 1 1 100%;
+             text-align: center;
+        }
+      .contact-box h2 {
+          margin-bottom: 20px;
+           font-size: 24px;
+           color: #ffcc00;
+        }
+      .contact-box p {
+            font-size: 16px;
+            line-height: 1.6;
+           margin-bottom: 10px;
+        }
+      .contact-box span {
+           display: block;
+            margin-bottom: 10px;
+        }
+      .contact-box a {
+            color: #ffcc00;
+            text-decoration: none;
+        }
+
+         /* Mobile Layout */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+               align-items: center;
+               padding: 0 10px;
+           }
+           .hero,
+            .sidebar,
+           .contact-box {
+               width: 100%;
+               margin: 10px 0;
+          }
+           .hero-form {
+               margin-top: 20px;
+           }
+           .navbar {
+                flex-direction: column;
+                align-items: flex-start;
+                text-align: left;
+               padding: 10px;
+               height: auto;
+           }
+           .navbar .logo-container {
+              margin-bottom: 10px;
+               margin-right: 0;
+           }
+           .navbar .nav-links {
+                flex-direction: column;
+               align-items: flex-start;
+                margin-left: 0;
+            }
+           .navbar a {
+                margin: 5px 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Theme Toggle -->
+    <div class="theme-toggle">
+        <input type="checkbox" id="theme-checkbox">
+        <label for="theme-checkbox" class="theme-label"></label>
+    </div>
+
+    <!-- Navigation Bar -->
+   <nav class="navbar">
+       <div class="logo-container">
+            <div class="logo">
+                <img src="https://www.parkhillfinancial.co.uk/wp-content/uploads/2019/11/logosvg.svg"
+                    alt="Park Hill Financial Logo">
+            </div>
+       </div>
+       <div class="nav-links">
+            <a href="#">Mortgages</a>
+           <a href="#">Equity Release</a>
+            <a href="#">Health Insurance</a>
+            <a href="#">Protection</a>
+           <a href="#">About Us</a>
+           <a href="#">Contact</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+           <div class="hero-text">
+                <h1>Park Hill Financial</h1>
+                <p>We are Independent Mortgage, Health, and Life Insurance Brokers offering trusted advice, highly competitive
+                    products, and superior service.</p>
+                <ul>
+                    <li>✅ Trusted advice</li>
+                    <li>✅ Highly competitive products</li>
+                    <li>✅ Superior service</li>
+                </ul>
+           </div>
+           <div class="hero-form">
+               <h2>Request a callback for a free quote</h2>
+                <form>
+                    <input type="text" placeholder="Your Name*" required>
+                    <input type="email" placeholder="Your Email" required>
+                    <input type="tel" placeholder="Your Phone Number" required>
+                   <textarea rows="4" placeholder="Your Message"></textarea>
+                   <button type="submit">Request a Callback</button>
+                </form>
+            </div>
+       </section>
+
+        <aside class="sidebar">
+            <h3>Why Choose Us?</h3>
+           <!-- Review Slider -->
+           <div class="review-slider">
+                <div class="reviews-list">
+                    <div class='sa_hover_container' style='padding:0% 0%; margin:0px 0%; min-height:1px; '>
+                        <div class="slider_content">
+                            <p class="slide_name">N SPITZER</p>
+                            <img decoding="async"
+                                src="https://parkhillfinancial.co.uk/wp-content/uploads/2019/11/stars_5_yellow_0b1a59536a11a89b7dccdbb84a6a5a9b.png"
+                                alt="5 stars" />
+                            <p class="slide_text">Excellent service, honest and genuine customer care. as a first time
+                                buyer, i
+                                had no idea what i was doing, Park Hill Financial 'held my hand' throughout the process'
+                                and ensured i understood all the steps and ramifications. have since renewed with them, and
+                                have refereed friends to use them too!</p>
+                       </div>
+                        <div class="slider_content">
+                            <p class="slide_name">BARRY L</p>
+                           <img decoding="async"
+                                src="https://parkhillfinancial.co.uk/wp-content/uploads/2019/11/stars_5_yellow_0b1a59536a11a89b7dccdbb84a6a5a9b.png"
+                                alt="5 stars" />
+                           <p class="slide_text">Was recommended to Park Hill and was not disappointed. Mark provides a
+                                first
+                               class service, professional and friendly. Have used them again and will continue to.</p>
+                       </div>
+                    </div>
+                    <div class='sa_hover_container' style='padding:0% 0%; margin:0px 0%; min-height:1px; '>
+                        <div class="slider_content">
+                            <p class="slide_name">J ROSENFIELD</p>
+                           <img decoding="async"
+                                src="https://parkhillfinancial.co.uk/wp-content/uploads/2019/11/stars_5_yellow_0b1a59536a11a89b7dccdbb84a6a5a9b.png"
+                                alt="5 stars" />
+                            <p class="slide_text">I was recommended Mark from Park Hill Finance a few months ago to assist
+                                with a remortgage. Mark was very professional and did everything to ensure that the best
+                                mortgage was found to serve my needs. I will be using him again.</p>
+                        </div>
+                       <div class="slider_content">
+                            <p class="slide_name">DAVID U</p>
+                            <img decoding="async"
+                                src="https://parkhillfinancial.co.uk/wp-content/uploads/2019/11/stars_5_yellow_0b1a59536a11a89b7dccdbb84a6a5a9b.png"
+                                alt="5 stars" />
+                            <p class="slide_text">Mark at Park Hill Financial was really helpful with helping me arrange my
+                                mortgage. Highly knowledgeable and truly professional, he helped me find the best
+                                available deal based on my requirements. Thank you!</p>
+                        </div>
+                    </div>
+                    <div class='sa_hover_container' style='padding:0% 0%; margin:0px 0%; min-height:1px; '>
+                        <div class="slider_content">
+                            <p class="slide_name">RAPHAEL T</p>
+                            <img decoding="async"
+                                src="https://parkhillfinancial.co.uk/wp-content/uploads/2019/11/stars_5_yellow_0b1a59536a11a89b7dccdbb84a6a5a9b.png"
+                                alt="5 stars" />
+                            <p class="slide_text">In my experience of working with Park Hill Finance, I have found them to
+                                be a
+                                very reliable and experienced finance company. The team, led by Mark Calvert, has a
+                                practical, hands on and solution driven approach. Park Hill Finance have a good eye for
+                                detail and are not perturbed by taking on difficult challenges. I would happily recommend
+                                them as trustworthy funders and look forward to working with them for many years to
+                                come.</p>
+                        </div>
+                        <div class="slider_content">
+                           <p class="slide_name">D STOCKMAN</p>
+                            <img decoding="async"
+                                src="https://parkhillfinancial.co.uk/wp-content/uploads/2019/11/stars_5_yellow_0b1a59536a11a89b7dccdbb84a6a5a9b.png"
+                                alt="5 stars" />
+                            <p class="slide_text">Very happy from start to finish and good communication throughout</p>
+                        </div>
+                    </div>
+                    <div class='sa_hover_container' style='padding:0% 0%; margin:0px 0%; min-height:1px; '>
+                       <div class="slider_content">
+                            <p class="slide_name">C DAMEN</p>
+                            <img decoding="async"
+                                src="https://parkhillfinancial.co.uk/wp-content/uploads/2019/11/stars_5_yellow_0b1a59536a11a89b7dccdbb84a6a5a9b.png"
+                                alt="5 stars" />
+                            <p class="slide_text">excellent service!</p>
+                        </div>
+                        <div class="slider_content">
+                            <p class="slide_name">S BLACK</p>
+                           <img decoding="async"
+                                src="https://parkhillfinancial.co.uk/wp-content/uploads/2019/11/stars_5_yellow_0b1a59536a11a89b7dccdbb84a6a5a9b.png"
+                                alt="5 stars" />
+                            <p class="slide_text">Great service, good advice and fast turnaround. Much quicker than going
+                                directly to one insurance provider.</p>
+                        </div>
+                    </div>
+                   <div class='sa_hover_container' style='padding:0% 0%; margin:0px 0%; min-height:1px; '>
+                       <div class="slider_content">
+                            <p class="slide_name">TIM JACKSON</p>
+                            <img decoding="async"
+                                src="https://parkhillfinancial.co.uk/wp-content/uploads/2019/11/stars_5_yellow_0b1a59536a11a89b7dccdbb84a6a5a9b.png"
+                                alt="5 stars" />
+                            <p class="slide_text">Fantastic experience working with this company. Our mortgage broker, Mark
+                                was prompt, helpful and trustworthy. Would 100% recommend.</p>
+                        </div>
+                        <div class="slider_content">
+                           <p class="slide_name">S KLEIN</p>
+                            <img decoding="async"
+                                src="https://parkhillfinancial.co.uk/wp-content/uploads/2019/11/stars_5_yellow_0b1a59536a11a89b7dccdbb84a6a5a9b.png"
+                                alt="5 stars" />
+                            <p class="slide_text">Quick, responsive and results-orientated service! Client-focus is
+                                excellent</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Google Reviews Section -->
+            <div class="reviews">
+                <img src="https://logos-world.net/wp-content/uploads/2023/12/Google-Review-Logo.png"
+                   alt="Google Reviews">
+               <p>Our customers say <span>Excellent</span></p>
+               <div class="stars">★ ★ ★ ★ ★</div>
+               <p><span>5.0</span> out of 5 based on <span>140+ reviews</span></p>
+            </div>
+        </aside>
+        <section class="contact-box">
+           <h2>Contact Us</h2>
+            <p>We are here to help you with your financial needs. Contact us today for a free consultation.</p>
+            <p><span>📞 Phone: <a href="tel:02070788987">020 7078 8987</a></span>
+               <span>✉ Email: <a href="mailto:info@parkhillfinancial.co.uk">info@parkhillfinancial.co.uk</a></span></p>
+        </section>
+   </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        © 2024 Park Hill Financial. All rights reserved. | <a href="#">Privacy Policy</a>
+   </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const themeCheckbox = document.getElementById('theme-checkbox');
+            const body = document.body;
+            const slider = document.querySelector('.reviews-list');
+            const slides = document.querySelectorAll('.sa_hover_container');
+             let slideIndex = 0;
+            let slideHeight = document.querySelector('.slider_content').offsetHeight; // Get fixed height
+            let slideCount = slides.length;
+
+            function updateSlider() {
+                 slider.style.transform = `translateY(-${slideIndex * slideHeight}px)`;
+            }
+
+
+            function nextSlide() {
+              slideIndex = (slideIndex + 1) % slideCount;
+                 updateSlider();
+            }
+
+            function setSliderHeight() {
+               slideHeight = document.querySelector('.slider_content').offsetHeight;
+                updateSlider();
+           }
+           window.addEventListener('resize', setSliderHeight);
+          setSliderHeight();
+
+           setInterval(nextSlide, 4000);
+
+
+
+             // Function to set the theme
+            function setTheme(isDarkMode) {
+               if (isDarkMode) {
+                    body.classList.remove('light-mode');
+                    body.classList.add('dark-mode');
+                  localStorage.setItem('theme', 'dark');
+              } else {
+                   body.classList.remove('dark-mode');
+                   body.classList.add('light-mode');
+                   localStorage.setItem('theme', 'light');
+               }
+            }
+            // Load saved theme from local storage
+           const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+               themeCheckbox.checked = true;
+                setTheme(true);
+            } else {
+                setTheme(false);
+            }
+           // Toggle theme on checkbox change
+            themeCheckbox.addEventListener('change', function () {
+               setTheme(this.checked);
+           });
+        });
+    </script>
+</body>
+
+</html>
